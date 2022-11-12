@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('Compilación') {
+        stage('CompilaciÃ³n') {
             steps {
                 sh './mvnw clean compile -e'
             }
@@ -21,6 +21,15 @@ pipeline {
                 sh 'nohup bash mvnw spring-boot:run &'
             }
         }
+      stage('SCM') {
+        git 'https://github.com/virginiapinol/ejemplo-maven.git'
+      }
+      stage('SonarQube analysis') {
+        def scannerHome = tool 'SonarScanner 4.0';
+        withSonarQubeEnv('sonarVirginia') { // If you have configured more than one global server connection, you can specify its name
+          sh "${scannerHome}/bin/sonar-scanner"
+        }
+      }
     }
     post{
         success{
