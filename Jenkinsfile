@@ -21,13 +21,9 @@ pipeline {
                 sh 'nohup bash mvnw spring-boot:run &'
             }
         }
-      stage('SCM') {
-        git 'https://github.com/virginiapinol/ejemplo-maven.git'
-      }
-      stage('SonarQube analysis') {
-        def scannerHome = tool 'SonarScanner 4.0';
-        withSonarQubeEnv('sonarVirginia') { // If you have configured more than one global server connection, you can specify its name
-          sh "${scannerHome}/bin/sonar-scanner"
+        stage('SonarQube analysis') {
+        withSonarQubeEnv(credentialsId: 'f225455e-ea59-40fa-8af7-08176e86507a', installationName: 'My SonarQube Server') { // You can override the credential to be used
+          sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
         }
       }
     }
@@ -50,6 +46,11 @@ void setBuildStatus(String message, String state) {
         errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
         statusResultSource: [$class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]]]
     ]);
+}
+
+withSonarQubeEnv('sonarVirginia', envOnly: true) {
+  // This expands the evironment variables SONAR_CONFIG_NAME, SONAR_HOST_URL, SONAR_AUTH_TOKEN that can be used by any script.
+  println ${env.SONAR_HOST_URL} 
 }
 
 def gitmerge(String Originbranch, String destinybranch) {
