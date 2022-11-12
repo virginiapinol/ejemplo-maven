@@ -86,8 +86,7 @@ public class RestData {
         String body = call.getBody();
         
         if (body == null){
-            response.
-            return response;
+            return null;
         }
         Mundial estado = gson.fromJson(body.toLowerCase(), Mundial.class);
         response.setTotalConfirmed(estado.getTotalConfirmed());
