@@ -11,6 +11,22 @@ pipeline {
                 sh './mvnw clean test -e'
             }
         }
+        stage('Análisis Sonarqube') {
+            environment {
+                scannerHome = tool 'SonarScanner'
+            }
+            steps {
+                 withSonarQubeEnv('sonarVirginia') {
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo_maven -Dsonar.host.url=http://localhost:3001 -Dsonar.login=sqp_698c2fe99ed14e165a65f6d9ca088a8edc9af442'
+                }
+            }
+            
+        }
+        stage("Comprobación Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        } 
         stage('Jar Code') {
             steps {
                 sh './mvnw clean package -e'
@@ -21,11 +37,6 @@ pipeline {
                 sh 'nohup bash mvnw spring-boot:run &'
             }
         }
-        stage('SonarQube analysis') {
-        withSonarQubeEnv(credentialsId: 'f225455e-ea59-40fa-8af7-08176e86507a', installationName: 'My SonarQube Server') { // You can override the credential to be used
-          sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
-        }
-      }
     }
     post{
         success{
