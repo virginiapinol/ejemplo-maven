@@ -17,7 +17,7 @@ pipeline {
             }
             steps {
                  withSonarQubeEnv('sonarVirginia') {
-                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo_maven -Dsonar.host.url=http://localhost:3001 -Dsonar.login=sqp_698c2fe99ed14e165a65f6d9ca088a8edc9af442'
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo_maven -Dsonar.host.url=http://sonarqube_vp:9000 -Dsonar.login=sqp_4837d908102b5c23f61e7fe24a87a922e26858ec'
                 }
             }
             
