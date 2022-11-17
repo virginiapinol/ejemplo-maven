@@ -1,3 +1,30 @@
+import groovy.json.JsonOutput
+
+def COLOR_MAP =[
+    'SUCCESS': 'good',
+    'FAILURE': 'danger'
+]
+
+def getBuildUser() {
+  def userCause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
+  def upstreamCause = currentBuild.rawBuild.getCause(Cause.UpstreamCause)
+
+  if (userCause) {
+    return userCause.getUserId()
+  } else if (upstreamCause) {
+    def upstreamJob = Jenkins.getInstance().getItemByFullName(upstreamCause.getUpstreamProject(), hudson.model.Job.class)
+    if (upstreamJob) {
+      def upstreamBuild = upstreamJob.getBuildByNumber(upstreamCause.getUpstreamBuild())
+      if (upstreamBuild) {
+        def realUpstreamCause = upstreamBuild.getCause(Cause.UserIdCause)
+        if (realUpstreamCause) {
+          return realUpstreamCause.getUserId()
+        }
+      }
+    }
+  }
+}
+
 pipeline {
     agent any
     stages {
@@ -45,7 +72,7 @@ pipeline {
 
         failure {
             setBuildStatus("Build failed", "FAILURE");
-        } 
+        }
     }
 }
 
@@ -57,27 +84,4 @@ void setBuildStatus(String message, String state) {
         errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
         statusResultSource: [$class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]]]
     ]);
-}
-
-withSonarQubeEnv('sonarVirginia', envOnly: true) {
-  // This expands the evironment variables SONAR_CONFIG_NAME, SONAR_HOST_URL, SONAR_AUTH_TOKEN that can be used by any script.
-  println ${env.SONAR_HOST_URL} 
-}
-
-def gitmerge(String Originbranch, String destinybranch) {
-    println "Realizando checkout" ${Originbranch} y ${destinybranch}
-    
-    checkout(Originbranch)
-    checkout(ramaDestino)
-    
-    println "Realizando merge" ${Originbranch} y ${destinybranch}
-    
-    sh """
-        git merge ${Originbranch}
-        git push origin ${destinybranch}
-        """
-}
-
-def checkout (String branch) {
-    sh "git reset --hard HEAD; git checkout ${branch}; git pull origin ${branch}"
 }
