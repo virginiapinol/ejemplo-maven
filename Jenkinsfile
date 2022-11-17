@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('Compilaci�n') {
+        stage('Compilación') {
             steps {
                 sh './mvnw clean compile -e'
             }
@@ -11,6 +11,22 @@ pipeline {
                 sh './mvnw clean test -e'
             }
         }
+        stage('Análisis Sonarqube') {
+            environment {
+                scannerHome = tool 'SonarScanner'
+            }
+            steps {
+                 withSonarQubeEnv('sonar') {
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo_maven -Dsonar.host.url=https://1af485c76019.sa.ngrok.io -Dsonar.login=sqp_698c2fe99ed14e165a65f6d9ca088a8edc9af442'
+                }
+            }
+            
+        }
+        stage("Comprobación Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        } 
         stage('Jar Code') {
             steps {
                 sh './mvnw clean package -e'
@@ -41,6 +57,11 @@ void setBuildStatus(String message, String state) {
         errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
         statusResultSource: [$class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]]]
     ]);
+}
+
+withSonarQubeEnv('sonarVirginia', envOnly: true) {
+  // This expands the evironment variables SONAR_CONFIG_NAME, SONAR_HOST_URL, SONAR_AUTH_TOKEN that can be used by any script.
+  println ${env.SONAR_HOST_URL} 
 }
 
 def gitmerge(String Originbranch, String destinybranch) {
