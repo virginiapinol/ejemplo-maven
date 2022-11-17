@@ -47,7 +47,7 @@ pipeline {
             }
             steps {
                  withSonarQubeEnv('sonar') {
-                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo_maven -Dsonar.host.url=https://1af485c76019.sa.ngrok.io -Dsonar.login=squ_6c8cafa0da0ac1956dc6a6f29d83e7d01856b654 -Dsonar.target=sonar.java.binaries'
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo_maven -Dsonar.host.url=https://1af485c76019.sa.ngrok.io -Dsonar.login=sqp_698c2fe99ed14e165a65f6d9ca088a8edc9af442 -Dsonar.target=sonar.java.binaries'
                 }
             }
             
