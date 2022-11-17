@@ -27,6 +27,9 @@ def getBuildUser() {
 
 pipeline {
     agent any
+    environment{
+        BUILD_USER = ''
+    }
     stages {
         stage('Compilación') {
             steps {
