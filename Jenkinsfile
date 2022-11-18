@@ -27,8 +27,16 @@ def getBuildUser() {
 
 pipeline {
     agent any
+    /*tools {
+        maven "MavenTools"
+    }*/
     environment{
         BUILD_USER = ''
+        NEXUS_VERSION = "nexus3"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL = "http://178.128.155.87:8081"
+        NEXUS_REPOSITORY = "devops-usach-vpino"
+        NEXUS_CREDENTIAL_ID = "equipo5"        
     }
     stages {
         stage('Compilación') {
@@ -41,7 +49,7 @@ pipeline {
                 sh './mvnw clean test -e'
             }
         }
-        stage('Análisis Sonarqube') {
+        /*stage('Análisis Sonarqube') {
             environment {
                 scannerHome = tool 'SonarScanner'
             }
@@ -56,21 +64,35 @@ pipeline {
             steps {
                 waitForQualityGate abortPipeline: true
             }
-        } 
+        } */
         stage('Jar Code') {
             steps {
                 sh './mvnw clean package -e'
             }
         }
-        stage('Run Jar') {
+        /*stage('Run Jar') {
             steps {
                 sh 'nohup bash mvnw spring-boot:run &'
             }
-        }
+        }*/
         stage ('Publish Nexus'){
             steps{
-                nexusPublisher nexusInstanceId: 'Nexus-1', nexusRepositoryId: 'devops-usach-vpino', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './build/DevOpsUsach2020-0.0.1.jar']], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: '0.0.1']]]
-             }
+                script {
+                    pom = readMavenPom file: "pom.xml";
+                    //filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                    //echo "*** aqui : ${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                    //def file = ${pom.artifactId}-${pom.version}.${pom.packaging}
+                    echo "*** aqui : ;"//${pom.artifactId} ${pom.version} ${pom.packaging}"
+                    artifactPath = "./build/${pom.artifactId}-${pom.version}.${pom.packaging}";//filesByGlob[0].path;
+                    artifactExists = fileExists artifactPath;
+                    if(artifactExists) {
+                        echo "Artifact exists: ${artifactPath}";
+                        nexusPublisher nexusInstanceId: 'Nexus-1', nexusRepositoryId: 'devops-usach-vpino', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './build/DevOpsUsach2020-0.0.2.jar']], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: pom.version]]]
+                    } else {
+                        echo "Artifact does not exist: ${artifactPath}";
+                    }
+                }
+            }
         }
     }
     post{
