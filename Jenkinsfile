@@ -76,6 +76,9 @@ pipeline {
             }
         }*/
         stage ('Publish Nexus'){
+			when {
+				branch "main"
+			}
             steps{
                 script {
                     pom = readMavenPom file: "pom.xml";
@@ -87,7 +90,7 @@ pipeline {
                     artifactExists = fileExists artifactPath;
                     if(artifactExists) {
                         echo "Artifact exists: ${artifactPath}";
-                        nexusPublisher nexusInstanceId: 'Nexus-1', nexusRepositoryId: 'devops-usach-vpino', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './build/DevOpsUsach2020-0.0.2.jar']], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: pom.version]]]
+                         nexusInstanceId: 'Nexus-1', nexusRepositoryId: 'devops-usach-vpino', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './build/DevOpsUsach2020-' + pom.version]], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: pom.version]]]
                     } else {
                         echo "Artifact does not exist: ${artifactPath}";
                     }
