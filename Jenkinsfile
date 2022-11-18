@@ -90,7 +90,7 @@ pipeline {
                     artifactExists = fileExists artifactPath;
                     if(artifactExists) {
                         echo "Artifact exists: ${artifactPath}";
-                         nexusInstanceId: 'Nexus-1', nexusRepositoryId: 'devops-usach-vpino', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './build/DevOpsUsach2020-' + pom.version + '.jar']], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: pom.version]]]
+                         nexusInstanceId: 'Nexus-1', nexusRepositoryId: 'devops-usach-vpino', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './build/${pom.artifactId}-${pom.version}.${pom.packaging}]], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: pom.version]]]
                     } else {
                         echo "Artifact does not exist: ${artifactPath}";
                     }
