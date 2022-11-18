@@ -82,7 +82,7 @@ pipeline {
                     //filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
                     //echo "*** aqui : ${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
                     //def file = ${pom.artifactId}-${pom.version}.${pom.packaging}
-                    echo "*** aqui : ${file};"//${pom.artifactId} ${pom.version} ${pom.packaging}"
+                    echo "*** aqui : ;"//${pom.artifactId} ${pom.version} ${pom.packaging}"
                     artifactPath = "./build/${pom.artifactId}-${pom.version}.${pom.packaging}";//filesByGlob[0].path;
                     artifactExists = fileExists artifactPath;
                     if(artifactExists) {
