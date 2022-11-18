@@ -28,7 +28,7 @@ def getBuildUser() {
 pipeline {
     agent any
     tools {
-        maven "Maven"
+        maven "MavenTools"
     }
     environment{
         BUILD_USER = 'NexusServer'
