@@ -79,8 +79,9 @@ pipeline {
             steps{
                 script {
                     pom = readMavenPom file: "pom.xml";
-                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                    echo "*** aqui : ${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                    //filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                    //echo "*** aqui : ${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                    echo "*** aqui : ${pom.artifactId} ${pom.version} ${pom.packaging}"
                     artifactPath = "./build/DevOpsUsach2020-0.0.1.jar"//filesByGlob[0].path;
                     artifactExists = fileExists artifactPath;
                 }
