@@ -67,6 +67,11 @@ pipeline {
                 sh 'nohup bash mvnw spring-boot:run &'
             }
         }
+        stage ('Publish Nexus'){
+            steps{
+                nexusPublisher nexusInstanceId: 'Nexus-1', nexusRepositoryId: 'devops-usach-vpino', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './build/DevOpsUsach2020-0.0.1.jar']], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: '0.0.1']]]
+             }
+        }
     }
     post{
         success{
