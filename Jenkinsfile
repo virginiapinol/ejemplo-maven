@@ -83,7 +83,7 @@ pipeline {
                     //echo "*** aqui : ${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
                     def file = ${pom.artifactId}-${pom.version}.${pom.packaging}
                     echo "*** aqui : ${file};"//${pom.artifactId} ${pom.version} ${pom.packaging}"
-                    artifactPath = "./build/DevOpsUsach2020-0.0.1.jar"//filesByGlob[0].path;
+                    artifactPath = "./build/${file}"//filesByGlob[0].path;
                     artifactExists = fileExists artifactPath;
                     if(artifactExists) {
                         echo "Artifact exists: ${artifactPath}";
