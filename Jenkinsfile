@@ -27,6 +27,9 @@ def getBuildUser() {
 
 pipeline {
     agent any
+    tools {
+        maven "Maven"
+    }
     environment{
         BUILD_USER = 'NexusServer'
         NEXUS_VERSION = "nexus3"
@@ -46,7 +49,7 @@ pipeline {
                 sh './mvnw clean test -e'
             }
         }
-        stage('Análisis Sonarqube') {
+        /*stage('Análisis Sonarqube') {
             environment {
                 scannerHome = tool 'SonarScanner'
             }
@@ -61,17 +64,17 @@ pipeline {
             steps {
                 waitForQualityGate abortPipeline: true
             }
-        } 
+        } */
         stage('Jar Code') {
             steps {
                 sh './mvnw clean package -e'
             }
         }
-        stage('Run Jar') {
+        /*stage('Run Jar') {
             steps {
                 sh 'nohup bash mvnw spring-boot:run &'
             }
-        }
+        }*/
         stage ('Publish Nexus'){
             steps{
                 script {
