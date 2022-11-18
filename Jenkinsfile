@@ -27,11 +27,11 @@ def getBuildUser() {
 
 pipeline {
     agent any
-    tools {
+    /*tools {
         maven "MavenTools"
-    }
+    }*/
     environment{
-        BUILD_USER = 'NexusServer'
+        BUILD_USER = ''
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "http://178.128.155.87:8081"
