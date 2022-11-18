@@ -84,6 +84,12 @@ pipeline {
                     echo "*** aqui : ${pom.artifactId} ${pom.version} ${pom.packaging}"
                     artifactPath = "./build/DevOpsUsach2020-0.0.1.jar"//filesByGlob[0].path;
                     artifactExists = fileExists artifactPath;
+                    if(artifactExists) {
+                        echo "Artifact exists: ${artifactPath}";
+                        nexusUpload artifactId: pom.artifactId, artifactVersion: pom.version, groupId: pom.groupId, packaging: pom.packaging, repositoryId: NEXUS_REPOSITORY, serverId: NEXUS_CREDENTIAL_ID, url: NEXUS_URL, versioning: true, file: artifactPath;
+                    } else {
+                        echo "Artifact does not exist: ${artifactPath}";
+                    }
                 }
             }
         }
