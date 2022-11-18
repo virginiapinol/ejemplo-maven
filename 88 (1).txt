@@ -1,0 +1,24 @@
+eGetMapping(path = "/estadoMundial", produces = MediaType.APPLICATION_JSON_VALUE)
+A A ATEOS
+
+RARO MEA
+
+SAS
+O
+
+OA AE AS
+MANS SETI
+
+ 
+
+ACA
+AS
+
+Mundial estado = gson.fromJson(call.getBody().toLowerCase(), Mundial.class);
+response. setTotalConfirmed(estado.getTotalConfirmed());
+
+ESE ES ASIA
+A SES LS OA
+
+SS ON
+
