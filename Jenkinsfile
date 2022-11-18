@@ -76,6 +76,9 @@ pipeline {
             }
         }*/
         stage ('Publish Nexus'){
+			when {
+				branch "main"
+			}
             steps{
                 script {
                     pom = readMavenPom file: "pom.xml";
