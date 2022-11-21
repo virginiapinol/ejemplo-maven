@@ -49,7 +49,7 @@ pipeline {
                 sh './mvnw clean test -e'
             }
         }
-        /*stage('Análisis Sonarqube') {
+        stage('Análisis Sonarqube') {
             environment {
                 scannerHome = tool 'SonarScanner'
             }
@@ -64,7 +64,7 @@ pipeline {
             steps {
                 waitForQualityGate abortPipeline: true
             }
-        } */
+        } 
         stage('Jar Code') {
             steps {
                 sh './mvnw clean package -e'
